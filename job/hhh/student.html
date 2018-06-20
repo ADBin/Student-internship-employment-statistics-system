@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>学生控制端</title>
+    <link rel="stylesheet" href="css/mdui.min.css">
+    <style>
+        .mdui-color-theme {
+            color: #4682B4;
+            background-color: #87CEFA;
+        }
+        .main{
+            margin-top: 64px;
+            padding: 20px;
+        }
+        .mdui-radio{
+            margin-right: 20px;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <span class="mdui-typo-title">学生控制端</span>
+        </div>
+    </div>
+    <div class="main mdui-typo">
+        <div class="mdui-card">
+            <!-- 卡片的标题和副标题 -->
+            <div class="mdui-card-primary">
+                <div id="_name" class="mdui-card-primary-title"></div>
+            </div>
+            
+            <!-- 卡片的内容 -->
+            <div class="mdui-card-content">
+                <label class="mdui-radio">
+                    <input type="radio" name="status1" value="l" id="local" checked/>
+                    <i class="mdui-radio-icon"></i>
+                    在校
+                </label>
+                <label class="mdui-radio">
+                    <input type="radio" name="status1" value="p" id="practice"/>
+                    <i class="mdui-radio-icon"></i>
+                    实习/就业
+                </label>
+                <div id="div2" style="display: none">
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">单位名称：</label>
+                        <input class="mdui-textfield-input" type="text" id="companyName"/>
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">地址：</label>
+                        <input class="mdui-textfield-input" type="text" id="address"/>
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">工作部门：</label>
+                        <input class="mdui-textfield-input" type="text" id="department"/>
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">部门负责人：</label>
+                        <input class="mdui-textfield-input" type="text" id="charge"/>
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">负责人联系电话：</label>
+                        <input class="mdui-textfield-input" type="text" id="chargePhone"/>
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">学生联系电话：</label>
+                        <input class="mdui-textfield-input" type="text" id="studentPhone"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 卡片的按钮 -->
+            <div class="mdui-card-actions">
+                <button id="push" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-pink" onclick="push();">提交</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/mdui.min.js"></script>
+    <script src="./jquery-3.2.1.min.js"></script>
+    <script>
+        var __id = document.getElementById("_name")
+        window.onload=function(){
+            $.get("/get",{
+
+            },(res)=>{
+                // var oli = document.createElement('li');
+                // oli.style.listStyle = 'none';
+                __id.innerHTML = '用户：'+res._id;
+                // __id.appendChild(oli);
+            })
+        }
+        var div2 = document.getElementById('div2');
+        $('input[value="l"]').click(function(){
+            div2.style.display="none";
+        });
+        $('input[value="p"]').click(function(){
+            div2.style.display="block";
+        });
+        function push(){
+            var stat = $('input[name="status1"]:checked').val();
+            // alert($("#id").val());
+            $.post("/student",{
+                // id: null,              
+                radio: stat,
+                // local: $("#local").checked(),
+                // practice: $("#practice").val(),
+                companyName: $("#companyName").val(),
+                address: $("#address").val(),
+                department: $("#department").val(),
+                charge: $("#charge").val(),
+                chargePhone: $("#chargePhone").val(),
+                studentPhone: $("#studentPhone").val(),
+                // pw: $("#pass").val()
+            },(res)=>{
+                console.log(res)
+                alert(res.msg);
+            })
+        }
+    </script>
+</body>
+</html>

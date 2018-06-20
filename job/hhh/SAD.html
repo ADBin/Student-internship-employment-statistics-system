@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>学生处</title>
+    <link rel="stylesheet" href="css/mdui.min.css">
+    <style>
+        .mdui-color-theme {
+            color: #4682B4;
+            background-color: #87CEFA;
+        }
+
+        .main {
+            margin-top: 64px;
+            padding: 20px;
+        }
+
+        td {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <span class="mdui-typo-title">学生处控制端</span>
+        </div>
+    </div>
+    <div class="main mdui-typo">
+        <div class="mdui-card">
+            <!-- 卡片的标题和副标题 -->
+            <div class="mdui-card-primary">
+                <div id="_name" class="mdui-card-primary-title"></div>
+                <div id="all" class="mdui-card-primary-title"></div>
+            </div>
+
+            <!-- 卡片的内容 -->
+            <div class="mdui-card-content">
+                <div class="mdui-table-fluid">
+                    <table class="mdui-table mdui-table-hoverable">
+                        <thead>
+                            <td>学号</td>
+                            <td>班级</td>
+                            <td>姓名</td>
+                            <td>就业状态</td>
+                            <td>单位名称</td>
+                            <td>地址</td>
+                            <td>工作部门</td>
+                            <td>部门负责人</td>
+                            <td>负责人联系电话</td>
+                            <td>个人联系电话</td>
+                            <td>修改时间</td>
+                        </thead>
+                        <tbody id="student">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/mdui.min.js"></script>
+    <script src="./jquery-3.2.1.min.js"></script>
+    <script>
+        var __id = document.getElementById("_name");
+        var _all = document.getElementById("all");
+        var student = document.getElementById("student");
+        window.onload = function () {
+            $.get("/get", {
+
+            }, (res) => {
+                // var oli = document.createElement('li');
+                // oli.style.listStyle = 'none';
+                __id.innerHTML = '用户：' + res._id;
+                // __id.appendChild(oli);
+            })
+            $.get("/SAD/all", {
+
+            }, (res) => {
+                _all.innerHTML = '总人数：' + res.all + '</br>' + '就业人数:' + res.onwork + '</br>' + '就业率：' + res.percent + '%';
+            })
+            $.get("/SAD", {
+
+            }, (res) => {
+                if (res.code == -1) {
+                    alert('该用户无权查询');
+                }
+                for (i in res.data) {
+                    var otr = document.createElement('tr');
+                    var otd = document.createElement('td');
+                    otd.innerHTML = res.data[i].id;
+                    otr.appendChild(otd);
+
+                    var otd = document.createElement('td');
+                    otd.innerHTML = res.data[i].class;
+                    otr.appendChild(otd);
+
+                    var otd = document.createElement('td');
+                    otd.innerHTML = res.data[i].name;
+                    otr.appendChild(otd);
+
+                    var otd = document.createElement('td');
+                    if (res.data[i].status['data'][0] == 0) {
+                        otd.innerHTML = "在校";
+                    } else {
+                        otd.innerHTML = "实习";
+                    }
+                    otr.appendChild(otd);
+
+                    var otd = document.createElement('td');
+                    otd.innerHTML = res.data[i].companyName;
+                    otr.appendChild(otd);
+
+                    var otd = document.createElement('td');
+                    otd.innerHTML = res.data[i].address;
+                    otr.appendChild(otd);
+
+                    var otd = document.createElement('td');
+                    otd.innerHTML = res.data[i].department;
+                    otr.appendChild(otd);
+
+                    var otd = document.createElement('td');
+                    otd.innerHTML = res.data[i].charge;
+                    otr.appendChild(otd);
+
+                    var otd = document.createElement('td');
+                    if (res.data[i].chargePhone == -1) {
+                        otd.innerHTML = '';
+                    } else {
+                        otd.innerHTML = res.data[i].chargePhone;
+                    }
+                    otr.appendChild(otd);
+
+                    var otd = document.createElement('td');
+                    if (res.data[i].studentPhone == -1) {
+                        otd.innerHTML = '';
+                    } else {
+                        otd.innerHTML = res.data[i].studentPhone;
+                    }
+                    otr.appendChild(otd);
+
+                    var otd = document.createElement('td');
+                    otd.innerHTML = res.data[i].time;
+                    otr.appendChild(otd);
+
+                    student.appendChild(otr);
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>
